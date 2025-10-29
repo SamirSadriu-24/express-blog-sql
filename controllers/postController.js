@@ -11,12 +11,14 @@ function getPost(req, res, next) {
 }
 
 
-function getSinglePost(req, res) {
+function getSinglePost(req, res, next) {
     const id = parseInt(req.params.id)
-    const Blog = posts.find(blog => blog.id === id);
+    const sql = 'SELECT * FROM posts WHERE id = ?';
 
-    if (!Blog) return res.status(404).json({ message: "Blog non trovato" });
-    res.json(Blog);
+    connection.query(sql, [id], (err, result) => {
+        if (err) return next(err)
+        res.json(result);
+    })
 }
 
 function createNewPost(req, res) {
