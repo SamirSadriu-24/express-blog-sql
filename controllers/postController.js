@@ -1,7 +1,13 @@
-import posts from '../data/posts.js';
 
-function getPost(req, res) {
-    res.json(posts)
+import connection from '../db.js';
+
+function getPost(req, res, next) {
+    const sql = 'SELECT * FROM posts'
+    
+    connection.query(sql,(err, result) => {
+        if (err) return next(err);
+        res.json(result)
+    })
 }
 
 
