@@ -3,7 +3,7 @@ import connection from '../db.js';
 
 function getPost(req, res, next) {
     const sql = 'SELECT * FROM posts'
-    
+
     connection.query(sql,(err, result) => {
         if (err) return next(err);
         res.json(result)
@@ -46,13 +46,14 @@ function modificaPost(req, res) {
     res.json({ message: "Post modificato", post: Blog });
 };
 
-function deletePost(req, res) {
+function deletePost(req, res, next) {
     const id = parseInt(req.params.id)
-    const index = posts.findIndex(blog => blog.id === id);
-    if (index === -1) return res.status(404).json({ message: "Blog non trovato" });
-    posts.splice(index, 1);
-    res.status(204).send();
-    console.log(posts);
+    const sql = 'DELETE FROM posts WHERE id = ?';
+
+   connection.query(sql, [id],(err, result)=> {
+    if (err) return next(err)
+        res.status(204).send();
+   })
 }
 
 export default { getPost, getSinglePost, createNewPost, modificaPost, deletePost }
